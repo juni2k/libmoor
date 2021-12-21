@@ -15,5 +15,6 @@ typedef struct {
   uint8_t *buf;
 } moor_dat_t;
 
+uint32_t moor_dat_asset_count(moor_dat_t *dat);
 
 #endif

@@ -98,5 +98,8 @@ int main(int argc, char *argv[]) {
   dat.size = size;
   dat.buf = buf;
 
+  uint8_t asset_count = moor_dat_asset_count(&dat);
+  fprintf(stderr, "asset count: %d\n", asset_count);
+
   return 0;
 }
