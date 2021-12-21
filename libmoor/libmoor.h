@@ -5,6 +5,15 @@
 #ifndef LIBMOOR_H
 #define LIBMOOR_H
 
+#include <stdint.h>
+
 void moor_hello(void);
+
+/* DAT file */
+typedef struct {
+  long size;
+  uint8_t *buf;
+} moor_dat_t;
+
 
 #endif

@@ -94,5 +94,9 @@ int main(int argc, char *argv[]) {
     error("load_file() failed");
   }
 
+  moor_dat_t dat;
+  dat.size = size;
+  dat.buf = buf;
+
   return 0;
 }
