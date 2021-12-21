@@ -17,4 +17,12 @@ typedef struct {
 
 uint32_t moor_dat_asset_count(moor_dat_t *dat);
 
+/* DAT file asset entry -- 44 bytes (32 + 3*4) */
+typedef struct {
+  char name[32]; /* filename */
+  uint32_t offset; /* offset in DAT */
+  uint32_t csize; /* compressed size */
+  uint32_t usize; /* uncompressed size */
+} moor_dat_entry_t ;
+
 #endif
