@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   datpath = argv[1];
 
   fprintf(stderr, "Loading: %s\n", datpath);
-  int size = get_file_size(datpath);
+  long size = get_file_size(datpath);
   fprintf(stderr, "size: %d bytes\n", size);
 
   uint8_t *buf = malloc(sizeof(uint8_t) * size);
