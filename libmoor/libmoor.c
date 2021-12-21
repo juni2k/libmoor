@@ -12,7 +12,7 @@ void moor_hello(void) {
 
 /* DAT implementation */
 
-uint32_t moor_dat_asset_count(moor_dat_t *dat) {
+uint32_t inline moor_dat_asset_count(moor_dat_t *dat) {
   /* The number of stored assets is in the last 4 bytes */
   return dat->buf[dat->size - 4];
 }
