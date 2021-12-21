@@ -25,4 +25,6 @@ typedef struct {
   uint32_t usize; /* uncompressed size */
 } moor_dat_entry_t ;
 
+moor_dat_entry_t* moor_dat_get_entry(moor_dat_t *dat, uint32_t index);
+
 #endif

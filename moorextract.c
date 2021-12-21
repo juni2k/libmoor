@@ -101,5 +101,23 @@ int main(int argc, char *argv[]) {
   uint8_t asset_count = moor_dat_asset_count(&dat);
   fprintf(stderr, "asset count: %d\n", asset_count);
 
+  /* Iterate through the asset entries and try to
+   * decompress the listed assets */
+  moor_dat_entry_t *ent;
+  for (int i = 0; i < asset_count; i++) {
+    ent = moor_dat_get_entry(&dat, i);
+    if (ent == NULL) {
+      fprintf(stderr, "invalid entry: %d, skipping\n", i);
+      continue;
+    }
+
+    fprintf(stderr,
+            "[asset] %s (offset: %d, c: %d, u: %d)\n",
+            ent->name, ent->offset, ent->csize, ent->usize);
+
+    /* TODO: decompress */
+  }
+
+
   return 0;
 }
