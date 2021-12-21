@@ -7,3 +7,6 @@ add_subdirectory(libmoor)
 
 add_executable(moortest moortest.c)
 target_link_libraries(moortest moor)
+
+add_executable(moorextract moorextract.c)
+target_link_libraries(moorextract moor)
