@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
 
 void error(char *message) {
   fprintf(stderr, message);
@@ -73,6 +75,38 @@ int load_file(char *path, uint8_t *buf, long count) {
   return success;
 }
 
+int write_file(char *path, uint8_t *buf, size_t len) {
+  fprintf(stderr, "writing file \"%s\" (%d bytes)\n", path, len);
+
+  int success = 0;
+  int rc;
+
+  FILE *fp = fopen(path, "wb");
+  if (fp == NULL) {
+    fprintf(stderr, "fopen() failed\n");
+    success = -1;
+    goto WRITE_FILE_RETURN;
+  }
+
+  unsigned long long written = fwrite(buf, sizeof(*buf), len, fp);
+  if (written != len) {
+    fprintf(stderr, "wrote: %d, expected: %d\n", written, len);
+    success = -1;
+    goto WRITE_FILE_FCLOSE;
+  }
+
+  WRITE_FILE_FCLOSE:
+  rc = fclose(fp);
+  if (rc == EOF) {
+    fprintf(stderr, "fclose() failed\n");
+    success = -1;
+    goto WRITE_FILE_RETURN;
+  }
+
+  WRITE_FILE_RETURN:
+  return success;
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     error("usage: ./moorextract MOORHUHN.DAT");
@@ -112,10 +146,31 @@ int main(int argc, char *argv[]) {
     }
 
     fprintf(stderr,
-            "[asset] %s (offset: %d, c: %d, u: %d)\n",
+            "[unpacking asset] %s (offset: %d, c: %d, u: %d)\n",
             ent->name, ent->offset, ent->csize, ent->usize);
 
-    /* TODO: decompress */
+    unsigned long asset_buf_len = sizeof(uint8_t) * ent->usize;
+    uint8_t *asset_buf = malloc(asset_buf_len);
+    if (asset_buf == NULL) {
+      fprintf(stderr, "malloc (asset_buf) returned NULL, skipping\n");
+      continue;
+    }
+
+    rc = moor_dat_uncompress(&dat, ent, asset_buf, asset_buf_len - 1);
+    if (rc < 0) {
+      fprintf(stderr, "moor_dat_uncompress failed, skipping\n");
+      goto FREE_ASSET_BUF;
+    }
+
+    mkdir("assets");
+
+    char destpath[16 + sizeof(ent->name)];
+    strncpy(destpath, "assets/", 8);
+    strncpy(&destpath[7], ent->name, sizeof(ent->name));
+    write_file(destpath, asset_buf, asset_buf_len);
+
+    FREE_ASSET_BUF:
+    free(asset_buf);
   }
 
 
