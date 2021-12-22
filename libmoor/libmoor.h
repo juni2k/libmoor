@@ -26,5 +26,6 @@ typedef struct {
 } moor_dat_entry_t ;
 
 moor_dat_entry_t* moor_dat_get_entry(moor_dat_t *dat, uint32_t index);
+int moor_dat_uncompress(moor_dat_t *dat, moor_dat_entry_t *ent, uint8_t *dest, unsigned long dest_len);
 
 #endif
