@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
       continue;
     }
 
-    rc = moor_dat_uncompress(&dat, ent, asset_buf, asset_buf_len - 1);
+    rc = moor_dat_uncompress(&dat, ent, asset_buf, asset_buf_len);
     if (rc < 0) {
       fprintf(stderr, "moor_dat_uncompress failed, skipping\n");
       goto FREE_ASSET_BUF;
