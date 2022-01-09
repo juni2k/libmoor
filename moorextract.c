@@ -11,7 +11,7 @@
 #include <sys/stat.h>
 
 void error(char *message) {
-  fprintf(stderr, message);
+  fprintf(stderr, "%s\n", message);
   exit(-1);
 }
 
