@@ -18,6 +18,10 @@ The game itself is available [here][dl].
 
 Extract assets from `MOORHUHN.DAT`.
 
+### moorconvert (WIP)
+
+Convert raw graphics to Windows bitmap files.
+
 ### moortest
 
 Just a test binary to check whether the build succeeds.

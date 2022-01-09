@@ -10,3 +10,6 @@ target_link_libraries(moortest moor)
 
 add_executable(moorextract moorextract.c)
 target_link_libraries(moorextract moor)
+
+add_executable(moorconvert moorconvert.c)
+target_link_libraries(moorconvert moor)
