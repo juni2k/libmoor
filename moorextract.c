@@ -162,7 +162,11 @@ int main(int argc, char *argv[]) {
       goto FREE_ASSET_BUF;
     }
 
+#ifdef __MINGW32__
     mkdir("assets");
+#else
+    mkdir("assets", 0755);
+#endif
 
     char destpath[16 + sizeof(ent->name)];
     strncpy(destpath, "assets/", 8);
