@@ -41,7 +41,7 @@ typedef struct {
     uint8_t *pixel_array; /* memory-managed by user */
 } moor_bitmap_t;
 
-void moor_bitmap_init(moor_bitmap_t *bitmap);
+void moor_bitmap_init(moor_bitmap_t *bitmap, int32_t width, int32_t height);
 uint32_t moor_bitmap_total_size(uint32_t pixel_count);
 void moor_bitmap_set_color_table(moor_bitmap_t *bitmap, uint8_t *buf);
 void moor_bitmap_set_pixel_array(moor_bitmap_t *bitmap, uint8_t *buf, uint32_t size);

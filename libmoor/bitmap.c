@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include "bitmap.h"
 
-void moor_bitmap_init(moor_bitmap_t *bitmap) {
+void moor_bitmap_init(moor_bitmap_t *bitmap,
+                      int32_t const width, int32_t const height) {
     bitmap->file_header.magic_number = 'MB';
     bitmap->file_header.size = 0xDEAD;
     bitmap->file_header.reserved0 = 0;
@@ -14,8 +15,8 @@ void moor_bitmap_init(moor_bitmap_t *bitmap) {
     bitmap->file_header.pixel_array_offset = 0xDEAD;
 
     bitmap->info_header.size = sizeof(moor_bitmap_info_header_t);
-    bitmap->info_header.width = 640;
-    bitmap->info_header.height = -480;
+    bitmap->info_header.width = width;
+    bitmap->info_header.height = -height;
     bitmap->info_header.planes = 1;
     bitmap->info_header.bpp = 8;
     bitmap->info_header.compression = 0;
