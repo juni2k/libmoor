@@ -6,10 +6,11 @@
 
 #include "libmoor/bitmap.h"
 
-static int poc_convert_raw_to_bmp(char const *path) {
+static int convert_raw_to_bmp(char const *path, char const *out_path, char const *palette,
+                              int32_t const width, int32_t const height) {
     int rc = 0;
 
-    fprintf(stderr, "converting [poc, 640x480]: %s\n", path);
+    fprintf(stderr, "converting %s [%dx%d]\n", path, width, height);
 
     long raw_size = get_file_size(path);
     fprintf(stderr, "raw file: %ld bytes\n", raw_size);
@@ -18,14 +19,14 @@ static int poc_convert_raw_to_bmp(char const *path) {
     if (raw_buf == NULL) {
         fprintf(stderr, "malloc() returned NULL\n");
         rc = -1;
-        goto POC_CONVERT_RETURN;
+        goto CONVERT_RETURN;
     }
 
     rc = load_file(path, raw_buf, raw_size);
     if (rc < 0) {
         fprintf(stderr, "load_file() failed\n");
         rc = -1;
-        goto POC_CONVERT_FREE_RAW_BUF;
+        goto CONVERT_FREE_RAW_BUF;
     }
 
     uint32_t bmp_size = moor_bitmap_total_size(raw_size);
@@ -34,50 +35,50 @@ static int poc_convert_raw_to_bmp(char const *path) {
     if (bmp_buf == NULL) {
         fprintf(stderr, "malloc() returned NULL\n");
         rc = -1;
-        goto POC_CONVERT_FREE_RAW_BUF;
+        goto CONVERT_FREE_RAW_BUF;
     }
 
     moor_bitmap_t *bitmap = malloc(sizeof(moor_bitmap_t));
     if (bitmap == NULL) {
         fprintf(stderr, "malloc() returned NULL\n");
         rc = -1;
-        goto POC_CONVERT_FREE_BMP_BUF;
+        goto CONVERT_FREE_BMP_BUF;
     }
 
     moor_bitmap_color_table_t pal_buf;
-    rc = load_file("assets/moorhuhn.pal", pal_buf, 1024);
+    rc = load_file(palette, pal_buf, 1024);
     if (rc < 0) {
         fprintf(stderr, "load_file() failed\n");
         rc = -1;
-        goto POC_CONVERT_FREE_BITMAP;
+        goto CONVERT_FREE_BITMAP;
     }
 
     /* Buffers are set up, time to create a bitmap! */
-    moor_bitmap_init(bitmap);
+    moor_bitmap_init(bitmap, width, height);
     moor_bitmap_set_color_table(bitmap, pal_buf);
     moor_bitmap_set_pixel_array(bitmap, raw_buf, raw_size);
     moor_bitmap_write(bitmap, bmp_buf);
 
     /* write bitmap buffer to file */
-    rc = write_file("out.bmp", bmp_buf, bmp_size);
+    rc = write_file(out_path, bmp_buf, bmp_size);
     if (rc < 0) {
         fprintf(stderr, "Error writing bitmap buffer to file... anyways-\n");
-        goto POC_CONVERT_FREE_BMP_BUF;
+        goto CONVERT_FREE_BMP_BUF;
     }
 
-    POC_CONVERT_FREE_BITMAP:
+    CONVERT_FREE_BITMAP:
     free(bitmap);
     bitmap = NULL;
 
-    POC_CONVERT_FREE_BMP_BUF:
+    CONVERT_FREE_BMP_BUF:
     free(bmp_buf);
     bmp_buf = NULL;
 
-    POC_CONVERT_FREE_RAW_BUF:
+    CONVERT_FREE_RAW_BUF:
     free(raw_buf);
     raw_buf = NULL;
 
-    POC_CONVERT_RETURN:
+    CONVERT_RETURN:
     return rc;
 }
 
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]) {
   fprintf(stderr, "this is moorconvert\n");
 
   int rc;
-  rc = poc_convert_raw_to_bmp("assets/main.raw");
+  rc = convert_raw_to_bmp("assets/main.raw", "out.bmp", "assets/moorhuhn.pal", 640, 480);
   if (rc == -1) {
       return -1;
   }
